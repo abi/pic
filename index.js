@@ -178,5 +178,5 @@ exports.App = App
 
 /* Start the app */
 if (require.main === module) {
-  new App()
+  new App(function(){}, {})
 }

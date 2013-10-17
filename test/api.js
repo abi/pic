@@ -9,15 +9,15 @@ function d (msg) {
 describe('Pic', function(){
 
   var PORT = 9998 // TODO: Use a random port
+  var DB = 'pic_test'
   var BASE = 'http://localhost:' + PORT + '/'
 
   var USER = 'abi'
   var PASS = 'password'
-  var USER_ID = '525f435a58e202dc28000001'
+  var USER_ID = '526049133a74fb87fb000001'
 
   before(function (done) {
-
-    var opts = {port: PORT, csrf: false}
+    var opts = {port: PORT, csrf: false, database: DB}
 
     var app = new App(function () {
       // Wait for indexes to be set up (there should be a callback for this. Find it.)

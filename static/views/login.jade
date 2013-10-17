@@ -1,0 +1,23 @@
+extends base
+
+block head
+  title Reverie — Login
+
+block content
+  h1 Login to Reverie
+
+  ul.error-msgs
+   each msg in messages
+    li.error-msg= msg
+
+  div#login
+    form(method='POST')
+      input(type='hidden', name='_csrf', value=token)
+      .field
+        label username
+        input#username(type='text', name='username')
+      .field
+        label password
+        input#password(type='password', name='password')
+      .field
+        input#submit(type='submit', value='submit')

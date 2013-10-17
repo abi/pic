@@ -1,0 +1,20 @@
+doctype 5
+html
+  head
+    link(rel='stylesheet', type='text/css', href='/css/normalize.css')
+    link(rel='stylesheet', type='text/css', href='/css/index.css')
+    title Reverie
+    script(type='text/javascript', src='/js/main.js')
+    link(href='http://fonts.googleapis.com/css?family=PT+Sans', rel='stylesheet', type='text/css')
+  body.home-page
+    .hero
+      h1.header.logo Reverie
+      .line
+      h2.tagline Frustration Free Blogging
+    .nav
+      a(href='/register') register
+      a(href='/login') login
+  //- if user
+  //-   h2 Logged in as #{user.username}
+  //-   a(href='/#{user.username}') View your blog
+  //- else

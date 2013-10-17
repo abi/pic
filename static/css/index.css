@@ -1,0 +1,224 @@
+body {
+  font-family: 'Fauna One', 'Times New Roman', serif;
+  font-size: 14px;
+  margin: 0px auto 0px 150px;
+  width: 480px;
+}
+
+/* Links */
+
+a {
+  color: #94002D;
+  text-decoration: none;
+}
+
+a:hover {
+  border-bottom: 1px solid #94002D;
+  color: #333;
+}
+
+/* Headers */
+
+h1 {
+  margin-bottom: 50px;
+}
+
+/* Forms */
+
+.field {
+  margin-bottom: 10px;
+}
+
+.field label {
+  float: left;
+  width: 100px;
+}
+
+.field input {
+  width: 200px;
+}
+
+.field #submit {
+  margin-left: 150px;
+  margin-top: 20px;
+  width: auto;
+}
+
+/* User elements */
+
+#navbar {
+  border-bottom: 1px solid black;
+  font-size: 13px;
+  /*background: #CCC;*/
+  /*padding: 0px 10px;*/
+}
+
+#navbar h2 {
+  display: inline-block;
+  width: auto;
+}
+
+#navbar #user-nav {
+  float: right;
+  margin-top: 15px;
+}
+
+#navbar #user-nav a {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+#navbar #user-nav a:last-child {
+  border-right: 0px;
+  margin-right: 0px;
+}
+
+#navbar .divider {
+  border-left: 1px solid black;
+  display: inline-block;
+  padding: 0px;
+}
+
+/* Logo */
+
+h2.logo {
+  font-size: 1em;
+  margin: 17px 0px 15px 0px;
+}
+
+h2.logo a {
+  color: #94002D;
+}
+
+h2.logo a:hover {
+  border-bottom: 0px;
+  color: #94002D;
+}
+
+/* Home page */
+
+.home-page .logo, .home-page .tagline {
+  color: #f7fc6a;
+  font-family: 'PT Sans', 'Myriad Pro', 'Helvetica', 'sans-serif';
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+.home-page {
+  background-color: #f9ad81;
+}
+
+.home-page .hero {
+  /*margin: 200px auto;*/
+  width: 370px;
+  height: 200px;
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  margin-top: -150px;
+  margin-left: -185px;
+}
+
+.home-page .line {
+  height: 10px;
+  background: #82ca9c;
+  margin: 0px;
+  width: 355px;
+  margin-left: 6px;
+  margin-top: -5px;
+}
+
+.home-page .logo {
+  font-size: 100px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.home-page .tagline {
+  font-size: 18px;
+  letter-spacing: 4.5px;
+  margin-left: 6px;
+}
+
+.home-page .nav {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  width: 120px;
+  height: 60px;
+  background: #f7fc6a;
+}
+
+.home-page .nav a {
+  display: inline-block;
+  color: #82ca9c;
+  font-family: 'PT Sans', 'Myriad Pro', 'Helvetica', 'sans-serif';
+  font-size: 11px;
+  letter-spacing: 0px;
+  padding-left: 20px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  height: 100%;
+}
+
+.home-page .nav a:hover {
+  background: #82ca9c;
+  color: #f7fc6a;
+}
+
+
+/* Login/register pages */
+
+ul.error-msgs {
+  margin: 0px 0px 20px 0px;
+  padding: 0px;
+}
+
+li.error-msg {
+  background: #DDD;
+  border: 1px solid red;
+  list-style-type: none;
+  padding: 5px;
+}
+
+/* New post page */
+
+textarea#post {
+  height: 300px;
+  width: 500px;
+}
+
+/* Blog page */
+
+.blog-page .title {
+  color: #333;
+  font-size: 3.5em;
+  font-weight: bold;
+  letter-spacing: -3px;
+  margin: 60px 0px 100px 0px;
+}
+
+.blog-page .post {
+  border-bottom: 1px solid #CCC;
+  color: #333;
+  font-family: 'Tenor Sans', Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.5em;
+  margin-bottom: 50px;
+  padding-right: 10px;
+  width: 480px;
+}
+
+.blog-page .post .bottom {
+  min-height: 20px;
+}
+
+.blog-page .post .bottom .edit-btn {
+  float: left;
+}
+
+.blog-page .post .bottom .created {
+  color: #666;
+  float: right;
+  font-size: 10px;
+}

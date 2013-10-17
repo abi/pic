@@ -1,0 +1,20 @@
+extends base
+
+block head
+  title Pic — Upload pic
+
+block content
+  h2 Edit post
+  form(method='POST', action='/editComplete')
+    input(type='hidden', name='_csrf', value=token)
+    input(type='hidden', name='id', value='#{post.id}')
+    .field
+      textarea#post(name='contents') #{post.contents}
+    .field
+      input.edit-btn(type='submit', value='update')
+
+  form(method='POST', action='/post/delete')
+    input(type='hidden', name='_csrf', value=token)
+    input(type='hidden', name='id', value='#{post.id}')
+    .field
+      input.delete-btn(type='submit', value='delete')

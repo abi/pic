@@ -4,6 +4,7 @@ var marked = require('marked')
 var models = require('./models')
 var mongoose = require('mongoose')
 var path = require('path')
+var sanitize = require('validator').sanitize
 var SimpleApp = require('./lib/SimpleApp')
 var timeago = require('timeago')
 var _ = require('underscore')
@@ -156,22 +157,38 @@ App.prototype.init = function () {
     })
   })
 
+  // POST APIs
+  // ---------
+
+  function escapeTrim (str) {
+    return sanitize(sanitize(str).escape()).trim()
+  }
+
+  // Upload a picture
+  // Requires auth
+  // Returns all metadata associated with the pic after it's saved
+  // Possible errors:
+  //  * Internal error (Mongo)
+  // TODO: Actually upload photos
   app.post('/pics/upload', self.auth, function (req, res) {
+
+    var title = escapeTrim(req.body.title || '')
+    var caption = escapeTrim(req.body.caption || '')
+
     var pic = new models.Pic({
-      title: req.body.title,
-      caption: req.body.caption,
+      title: title,
+      caption: caption,
       user: req.user
     })
 
     pic.save(function (err, pic) {
       if (err) {
-        next(err)
+        res.send(500, {code: 'INTERNAL_ERROR'})
       } else {
         res.send(200, pic.toJSON())
       }
     })
   })
-
 }
 
 exports.App = App

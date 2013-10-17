@@ -18,12 +18,13 @@
     "jade": "*",
     "marked": "*",
     "MD5": "*",
+    "mocha": "~1.13.0",
     "mongoose": "*",
     "passport": "*",
     "passport-local": "*",
+    "request": "~2.27.0",
     "timeago": "*",
-    "mocha": "~1.13.0",
-    "request": "~2.27.0"
+    "validator": "~1.5.1"
   },
   "devDependencies": {
     "nodemon": "*",

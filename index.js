@@ -189,6 +189,54 @@ App.prototype.init = function () {
       }
     })
   })
+
+
+  app.post('/pics/:id/like', self.auth, function (req, res) {
+
+    models.Pic.findById(req.params.id, function (err, pic) {
+      var idCastError = err &&
+                        (err.name === 'CastError') &&
+                        (err.type === 'ObjectId')
+      if (pic === null || idCastError) {
+        res.send(500, {code: 'ID_NOT_FOUND', detail: 'Pic ID not found'})
+      } else if (err) {
+        res.send(500, {code: 'INTERNAL_ERROR'})
+      } else {
+        models.Like.findOne({user: req.user, pic: pic}, function (err, like) {
+          if (err) {
+           res.send(500, {code: 'INTERNAL_ERROR'})
+           return
+          } else {
+            if (like === null) {
+              var like = new models.Like({
+                user: req.user,
+                pic: pic
+              })
+
+              like.save(function (err, like) {
+                if (err) {
+                 res.send(500, {code: 'INTERNAL_ERROR'})
+                } else {
+                  pic.update({$inc: {numLikes: 1}}, function (err, numLikes) {
+                    var output = pic.toJSON()
+                    output.numLikes = numLikes
+                    if (err) {
+                      res.send(500, {code: 'INTERNAL_ERROR'})
+                    } else {
+                      res.send(200, output)
+                    }
+                  })
+                }
+              })
+            } else {
+              res.send(200, pic.toJSON())
+            }
+          }
+        })
+      }
+    })
+
+  })
 }
 
 exports.App = App

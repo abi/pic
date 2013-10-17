@@ -23,7 +23,7 @@ var Pic = mongoose.Schema({
   title: { type: String, default: ''},
   caption: String,
   user: {type: mongoose.Schema.Types.ObjectId, required: true, index: true},
-  num_likes: { type: Number, default: 0 },
+  numLikes: { type: Number, default: 0 },
 })
 
 var Like = mongoose.Schema({

@@ -190,13 +190,12 @@ App.prototype.init = function () {
     })
   })
 
-
-  app.post('/pics/:id/like', self.auth, function (req, res) {
-
-    models.Pic.findById(req.params.id, function (err, pic) {
+  function findLike (picId, req, res, cb) {
+    models.Pic.findById(picId, function (err, pic) {
       var idCastError = err &&
                         (err.name === 'CastError') &&
                         (err.type === 'ObjectId')
+
       if (pic === null || idCastError) {
         res.send(500, {code: 'ID_NOT_FOUND', detail: 'Pic ID not found'})
       } else if (err) {
@@ -207,35 +206,77 @@ App.prototype.init = function () {
            res.send(500, {code: 'INTERNAL_ERROR'})
            return
           } else {
-            if (like === null) {
-              var like = new models.Like({
-                user: req.user,
-                pic: pic
-              })
-
-              like.save(function (err, like) {
-                if (err) {
-                 res.send(500, {code: 'INTERNAL_ERROR'})
-                } else {
-                  pic.update({$inc: {numLikes: 1}}, function (err, numLikes) {
-                    var output = pic.toJSON()
-                    output.numLikes = numLikes
-                    if (err) {
-                      res.send(500, {code: 'INTERNAL_ERROR'})
-                    } else {
-                      res.send(200, output)
-                    }
-                  })
-                }
-              })
-            } else {
-              res.send(200, pic.toJSON())
-            }
+            cb(like, pic)
           }
         })
       }
     })
+  }
 
+  app.post('/pics/:id/like', self.auth, function (req, res) {
+    var picId = req.params.id
+    findLike (picId, req, res, function (like, pic) {
+      if (like === null) {
+
+        // Create a new like
+        var like = new models.Like({
+          user: req.user,
+          pic: pic
+        })
+
+        like.save(function (err, like) {
+          if (err) {
+            d(err)
+           res.send(500, {code: 'INTERNAL_ERROR'})
+          } else {
+
+            // Update numLikes for the pic
+            // Handle pic not found error (race condition if someone deleted the pic)
+            models.Pic.findByIdAndUpdate(pic._id, {$inc: {numLikes: 1}}, function (err, pic) {
+              var output = pic.toJSON()
+              if (err) {
+                d(err)
+                res.send(500, {code: 'INTERNAL_ERROR'})
+              } else {
+                res.send(200, output)
+              }
+            })
+          }
+        })
+
+      } else {
+        res.send(200, pic.toJSON())
+      }
+    })
+  })
+
+  app.post('/pics/:id/unlike', self.auth, function (req, res) {
+    var picId = req.params.id
+    findLike (picId, req, res, function (like, pic) {
+      if (like === null) {
+        res.send(200, pic.toJSON())
+      } else {
+        // Delete the like
+        like.remove(function (err) {
+          if (err) {
+            d(err)
+            res.send(500, {code: 'INTERNAL_ERROR'})
+          } else {
+
+            // Update numLikes for the pic
+            models.Pic.findByIdAndUpdate(pic._id, {$inc: {numLikes: -1}}, function (err, pic) {
+              var output = pic.toJSON()
+              if (err) {
+                d(err)
+                res.send(500, {code: 'INTERNAL_ERROR'})
+              } else {
+                res.send(200, output)
+              }
+            })
+          }
+        })
+      }
+    })
   })
 }
 

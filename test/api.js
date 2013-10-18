@@ -94,6 +94,34 @@ describe('Pic', function(){
     })
   })
 
+  describe('unlike', function () {
+    it('should decrement the like count of the pic', function (done) {
+      request.post({
+        url: BASE + 'pics/' + picId + '/unlike',
+        jar: true
+      }, function (error, response, body) {
+        assert.equal(response.statusCode, 200)
+        var pic = JSON.parse(body)
+        assert.equal(pic.title, 'test')
+        assert.equal(pic.numLikes, 0)
+        done()
+      })
+    })
+
+    it('when called by the same user more than once should do nothing', function (done) {
+      request.post({
+        url: BASE + 'pics/' + picId + '/unlike',
+        jar: true
+      }, function (error, response, body) {
+        assert.equal(response.statusCode, 200)
+        var pic = JSON.parse(body)
+        assert.equal(pic.title, 'test')
+        assert.equal(pic.numLikes, 0)
+        done()
+      })
+    })
+  })
+
   describe('get pic by id', function () {
     it('should return the previously inserted image when queried by ID', function (done) {
       request.get({

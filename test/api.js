@@ -1,6 +1,7 @@
 var App = require('../index').App
 var assert = require('assert')
 var config = require('../config')
+var debug = require('debug')('testing')
 var mongodb = require('mongodb')
 var request = require('request')
 
@@ -266,14 +267,14 @@ describe('Pic', function(){
     this.timeout(30000)
     var db = new mongodb.Db(DB, new mongodb.Server(config.mongo.host, config.mongo.port), {w: 0})
     db.open(function(err, db) {
-      console.log(err)
+      debug(err)
       assert.equal(null, err)
       db.dropDatabase(function(err, result) {
         if (err) {
           console.error('Unable to drop database')
           done()
         } else {
-          console.log('Test database dropped')
+          debug('Test database dropped')
           done()
         }
       })

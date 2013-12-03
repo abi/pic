@@ -17,7 +17,7 @@ tunnel:
 
 .PHONY : test
 test:
-	./node_modules/.bin/mocha test/api.js --timeout 5000
+	DEBUG="*,-connect:*,-express:*,-send,-mocha:*" ./node_modules/.bin/mocha test/api.js --timeout 5000
 
 .PHONY : rebuild
 rebuild:

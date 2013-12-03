@@ -1,16 +1,16 @@
 extends base
 
 block head
-  title Reverie — Register
+  title Reverie — Sign Up
 
 block content
-  h1 Register for Reverie
+  h1 Sign up for Reverie
 
   ul.error-msgs
    each msg in messages
     li.error-msg= msg
 
-  div#register
+  div#signup
     form(method='POST')
       input(type='hidden', name='_csrf', value=token)
       .field

@@ -1,5 +1,7 @@
 var App = require('../index').App
 var assert = require('assert')
+var config = require('../config')
+var mongodb = require('mongodb')
 var request = require('request')
 
 function d (msg) {
@@ -14,7 +16,6 @@ describe('Pic', function(){
 
   var USER = 'abi'
   var PASS = 'password'
-  var USER_ID = '526049133a74fb87fb000001'
 
   before(function (done) {
     var opts = {port: PORT, csrf: false, database: DB}
@@ -23,17 +24,24 @@ describe('Pic', function(){
       // Wait for indexes to be set up (there should be a callback for this. Find it.)
       setTimeout(function () {
         request.post({
-          url: BASE + 'login',
-          form: {username: USER, password: PASS},
+          url: BASE + 'signup',
+          form: {name: USER, username: USER, email: USER + '@email.com', password: PASS},
           jar: true
         }, function (error, response, body) {
-          done()
+          request.post({
+            url: BASE + 'login',
+            form: {username: USER, password: PASS},
+            jar: true
+          }, function (error, response, body) {
+            done()
+          })
         })
       }, 2000)
     }, opts)
   })
 
   var picId = null
+  var userId = null
 
   describe('upload', function () {
     it('should add the image to the database', function (done) {
@@ -51,7 +59,7 @@ describe('Pic', function(){
       })
     })
 
-    it('should sanizize title and caption', function (done) {
+    it('should sanitize title and caption', function (done) {
       request.post({
         url: BASE + 'pics/upload',
         form: {title: 'test <h1>hi</h1>    ', caption: 'testy <script>gah</script>'},
@@ -129,6 +137,7 @@ describe('Pic', function(){
       }, function (error, response, body) {
         assert.equal(response.statusCode, 200)
         var pic = JSON.parse(body)
+        userId = pic.user
         assert.equal(pic.title, 'test')
         done()
       })
@@ -161,13 +170,13 @@ describe('Pic', function(){
   })
 
   describe('get new pics', function () {
-    it('should return the 20 most recent pics', function (done) {
+    it('should return the 2 most recent pics', function (done) {
       request.get({
         url: BASE + 'pics/new',
       }, function (error, response, body) {
         assert(response.statusCode === 200)
         var res = JSON.parse(body)
-        assert.equal(res.pics.length, 20)
+        assert.equal(res.pics.length, 2)
         // assert.equal(res.pics[0].title, 'test') (TODO)
         assert.equal(res.page, 1)
         done()
@@ -188,13 +197,13 @@ describe('Pic', function(){
   })
 
   describe('get popular pics', function () {
-    it('should return the 20 most recent pics', function (done) {
+    it('should return the 2 most recent pics', function (done) {
       request.get({
         url: BASE + 'pics/popular',
       }, function (error, response, body) {
         assert(response.statusCode === 200)
         var res = JSON.parse(body)
-        assert.equal(res.pics.length, 20)
+        assert.equal(res.pics.length, 2)
         // assert.equal(res.pics[0].title, 'test') (TODO)
         assert.equal(res.page, 1)
         done()
@@ -217,11 +226,11 @@ describe('Pic', function(){
   describe('get pics by a user', function () {
     it('should return the 20 most recent pics', function (done) {
       request.get({
-        url: BASE + 'pics/user/' + USER_ID,
+        url: BASE + 'pics/user/' + userId,
       }, function (error, response, body) {
         assert.equal(response.statusCode, 200)
         var res = JSON.parse(body)
-        assert.equal(res.pics.length, 20)
+        assert.equal(res.pics.length, 2)
         // assert.equal(res.pics[0].title, 'test') (TODO)
         assert.equal(res.page, 1)
         done()
@@ -230,7 +239,7 @@ describe('Pic', function(){
 
     it('when asked for page 10, it should return no pics', function (done) {
       request.get({
-        url: BASE + 'pics/user/' + USER_ID + '?page=10',
+        url: BASE + 'pics/user/' + userId + '?page=10',
       }, function (error, response, body) {
         assert.equal(response.statusCode, 200)
         var res = JSON.parse(body)
@@ -242,7 +251,7 @@ describe('Pic', function(){
 
     it('when asked for pics by a non-existent user, it should return an error', function (done) {
       request.get({
-        url: BASE + 'pics/user/' + USER_ID.slice(1) + '?page=10',
+        url: BASE + 'pics/user/' + userId.slice(1) + '?page=10',
       }, function (error, response, body) {
         assert.equal(response.statusCode, 500)
         var res = JSON.parse(body)
@@ -253,7 +262,21 @@ describe('Pic', function(){
 
   })
 
-  after(function () {
-    // TODO: Clean up the test database
+  after(function (done) {
+    this.timeout(30000)
+    var db = new mongodb.Db(DB, new mongodb.Server(config.mongo.host, config.mongo.port), {w: 0})
+    db.open(function(err, db) {
+      console.log(err)
+      assert.equal(null, err)
+      db.dropDatabase(function(err, result) {
+        if (err) {
+          console.error('Unable to drop database')
+          done()
+        } else {
+          console.log('Test database dropped')
+          done()
+        }
+      })
+    })
   })
 })
